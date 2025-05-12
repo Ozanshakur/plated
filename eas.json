@@ -1,26 +1,47 @@
 {
-    "cli": {
-      "version": ">=16.2.2",
-      "appVersionSource": "remote"
-    },
-    "build": {
-      "development": {
-        "developmentClient": true,
-        "distribution": "internal"
+  "cli": {
+    "version": ">=16.2.2",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_NO_DOTENV": "1"
       },
-      "preview": {
-        "distribution": "internal",
-        "ios": {
-          "simulator": true
-        }
-      },
-      "production": {
-        "distribution": "store",
-        "autoIncrement": true
+      "ios": {
+        "prebuildCommand": "node ./fix-expo-podspec-direct.js"
       }
     },
-    "submit": {
-      "production": {}
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true,
+        "prebuildCommand": "node ./fix-expo-podspec-direct.js"
+      },
+      "env": {
+        "EXPO_NO_DOTENV": "1"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "autoIncrement": true,
+      "env": {
+        "EXPO_NO_DOTENV": "1"
+      },
+      "ios": {
+        "prebuildCommand": "node ./fix-expo-podspec-direct.js"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "ozan05avci@gmail.com",
+        "ascAppId": "6745790562",
+        "appleTeamId": "9RFBD6KWF9"
+      }
     }
   }
-  
+}
