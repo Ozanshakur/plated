@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "postinstall": "node patch-supabase.js && patch-package"
+    "postinstall": "node patch-supabase.js"
   },
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
@@ -42,7 +42,6 @@
     "https-browserify": "^1.0.0",
     "i18n-js": "^4.5.1",
     "lucide-react-native": "^0.335.0",
-    "patch-package": "^8.0.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "react": "18.2.0",
@@ -71,7 +70,9 @@
   "resolutions": {
     "react-native-svg": "^14.0.0",
     "metro": "0.76.8",
-    "metro-resolver": "0.76.8"
+    "metro-resolver": "0.76.8",
+    "@types/react": "~18.2.45",
+    "react-native-screens": "~3.29.0"
   },
   "private": true
 }

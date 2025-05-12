@@ -37,4 +37,13 @@ config.resolver.blockList = [
   /node_modules\/@supabase\/supabase-js\/dist\/.*\/lib\/realtime-client\.js/,
 ]
 
+// Workaround für importLocationsPlugin-Problem
+if (config.serializer && config.serializer.customSerializer) {
+  const originalCustomSerializer = config.serializer.customSerializer
+  config.serializer.customSerializer = (entryPoint, preModules, graph, options) => {
+    // Stelle sicher, dass keine Abhängigkeit von importLocationsPlugin besteht
+    return originalCustomSerializer(entryPoint, preModules, graph, options)
+  }
+}
+
 module.exports = config
