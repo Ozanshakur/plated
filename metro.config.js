@@ -2,6 +2,7 @@
 const { getDefaultConfig } = require("expo/metro-config")
 const path = require("path")
 
+// Erstelle eine Basiskonfiguration mit Expo-Defaults
 const config = getDefaultConfig(__dirname)
 
 // Füge Node.js-Polyfills hinzu
@@ -35,10 +36,5 @@ config.resolver.blockList = [
   /node_modules\/@supabase\/realtime-js/,
   /node_modules\/@supabase\/supabase-js\/dist\/.*\/lib\/realtime-client\.js/,
 ]
-
-// Entferne die Verwendung von importLocationsPlugin, da es in neueren Metro-Versionen Probleme verursachen kann
-if (config.serializer && config.serializer.getModulesRunBeforeMainModule) {
-  delete config.serializer.getModulesRunBeforeMainModule
-}
 
 module.exports = config
