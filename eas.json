@@ -9,9 +9,6 @@
       "distribution": "internal",
       "env": {
         "APP_ENV": "development"
-      },
-      "npm": {
-        "installCommand": "npm install --legacy-peer-deps"
       }
     },
     "preview": {
@@ -21,18 +18,12 @@
       },
       "env": {
         "APP_ENV": "staging"
-      },
-      "npm": {
-        "installCommand": "npm install --legacy-peer-deps"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
-      },
-      "npm": {
-        "installCommand": "npm install --legacy-peer-deps"
       }
     }
   },
