@@ -10,6 +10,7 @@
       "env": {
         "APP_ENV": "development"
       },
+      "credentialsSource": "remote",
       "prebuildCommand": "echo 'export const METRO_CONFIG_PATH = \"./metro.config.js\";' > metro-config-path.js"
     },
     "preview": {
@@ -20,12 +21,22 @@
       "env": {
         "APP_ENV": "staging"
       },
+      "credentialsSource": "remote",
       "prebuildCommand": "echo 'export const METRO_CONFIG_PATH = \"./metro.config.js\";' > metro-config-path.js"
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
+      },
+      "credentialsSource": "remote",
+      "distribution": "store",
+      "ios": {
+        "credentialsSource": "remote",
+        "enterpriseProvisioning": "universal"
+      },
+      "android": {
+        "credentialsSource": "remote"
       },
       "prebuildCommand": "echo 'export const METRO_CONFIG_PATH = \"./metro.config.js\";' > metro-config-path.js"
     }
