@@ -36,4 +36,9 @@ config.resolver.blockList = [
   /node_modules\/@supabase\/supabase-js\/dist\/.*\/lib\/realtime-client\.js/,
 ]
 
+// Entferne die Verwendung von importLocationsPlugin, da es in neueren Metro-Versionen Probleme verursachen kann
+if (config.serializer && config.serializer.getModulesRunBeforeMainModule) {
+  delete config.serializer.getModulesRunBeforeMainModule
+}
+
 module.exports = config

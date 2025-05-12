@@ -21,7 +21,8 @@
         "NSPhotoLibraryUsageDescription": "Diese App benötigt Zugriff auf deine Fotos, um Bilder für Beiträge und Verifizierungen auszuwählen.",
         "NSLocationWhenInUseUsageDescription": "Diese App benötigt Zugriff auf deinen Standort, um relevante Beiträge in deiner Nähe anzuzeigen.",
         "NSUserTrackingUsageDescription": "Diese Information wird verwendet, um dir relevantere Inhalte anzuzeigen und die App-Erfahrung zu verbessern.",
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": ["remote-notification"],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
