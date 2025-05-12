@@ -1,40 +1,31 @@
 {
   "cli": {
-    "version": ">= 5.9.1"
+    "version": ">=16.2.2",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m-medium"
-      },
-      "hooks": {
-        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal",
       "ios": {
-        "resourceClass": "m-medium"
-      },
-      "android": {
-        "buildType": "apk"
-      },
-      "hooks": {
-        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
+        "simulator": true
       }
     },
     "production": {
-      "ios": {
-        "resourceClass": "m-medium"
-      },
-      "hooks": {
-        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
-      }
+      "distribution": "store",
+      "autoIncrement": true
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "ozan05avci@gmail.com",
+        "ascAppId": "6745790562",
+        "appleTeamId": "9RFBD6KWF9"
+      }
+    }
   }
 }
