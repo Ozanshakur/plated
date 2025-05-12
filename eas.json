@@ -1,38 +1,22 @@
 {
   "cli": {
-    "version": ">= 5.9.1",
-    "appVersionSource": "local"
+    "version": ">=16.2.2",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "APP_ENV": "development"
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal",
       "ios": {
-        "simulator": false
-      },
-      "env": {
-        "APP_ENV": "staging"
+        "simulator": true
       }
     },
     "production": {
-      "autoIncrement": true,
-      "env": {
-        "APP_ENV": "production"
-      },
       "distribution": "store",
-      "ios": {
-        "resourceClass": "m-medium",
-        "credentialsSource": "remote"
-      },
-      "android": {
-        "buildType": "app-bundle"
-      }
+      "autoIncrement": true
     }
   },
   "submit": {
