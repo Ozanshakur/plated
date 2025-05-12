@@ -2,7 +2,7 @@
   "expo": {
     "name": "Plated",
     "slug": "plated",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "de.getplated.app",
-      "buildNumber": "1",
+      "buildNumber": "6",
       "infoPlist": {
         "NSCameraUsageDescription": "Diese App benötigt Zugriff auf die Kamera, um Fotos für Beiträge und Verifizierungen aufzunehmen.",
         "NSPhotoLibraryUsageDescription": "Diese App benötigt Zugriff auf deine Fotos, um Bilder für Beiträge und Verifizierungen auszuwählen.",
