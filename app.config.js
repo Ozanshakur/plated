@@ -39,6 +39,13 @@ module.exports = {
         photosPermission: "Die App benötigt Zugriff auf deine Fotos, um Bilder für deine Posts auszuwählen.",
       },
     ],
+    // Add this plugin to fix the Expo.podspec issue
+    [
+      "./fix-expo-podspec-plugin.js",
+      {
+        enabled: true,
+      },
+    ],
   ],
   extra: {
     eas: {

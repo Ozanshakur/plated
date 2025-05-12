@@ -1,40 +1,34 @@
 {
   "cli": {
-    "version": ">=16.2.2",
-    "appVersionSource": "remote"
+    "version": ">= 5.9.1"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": {
-        "EXPO_NO_DOTENV": "1"
+      "ios": {
+        "resourceClass": "m-medium"
       }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
-        "simulator": true
+        "resourceClass": "m-medium"
       },
-      "env": {
-        "EXPO_NO_DOTENV": "1"
+      "hooks": {
+        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
       }
     },
     "production": {
-      "distribution": "store",
-      "autoIncrement": true,
-      "env": {
-        "EXPO_NO_DOTENV": "1"
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "hooks": {
+        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
       }
     }
   },
   "submit": {
-    "production": {
-      "ios": {
-        "appleId": "ozan05avci@gmail.com",
-        "ascAppId": "6745790562",
-        "appleTeamId": "9RFBD6KWF9"
-      }
-    }
+    "production": {}
   }
 }

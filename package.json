@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "postinstall": "node fix-podfile-generation.js"
+    "postinstall": "node fix-expo-podspec.js"
   },
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
