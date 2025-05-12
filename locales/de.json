@@ -1,0 +1,76 @@
+{
+  "app": {
+    "name": "Plated"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "forgotPassword": "Passwort vergessen?",
+    "resetPassword": "Passwort zurücksetzen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "username": "Benutzername"
+  },
+  "verification": {
+    "title": "Verifizierung",
+    "submit": "Verifizierung einreichen",
+    "pending": "Verifizierung in Bearbeitung",
+    "approved": "Verifiziert",
+    "rejected": "Verifizierung abgelehnt",
+    "uploadId": "Personalausweis hochladen",
+    "uploadLicense": "Führerschein hochladen",
+    "notifications": {
+      "enabled": "Benachrichtigungen sind aktiviert",
+      "disabled": "Benachrichtigungen sind deaktiviert",
+      "on": "AN",
+      "off": "AUS"
+    }
+  },
+  "profile": {
+    "edit": "Profil bearbeiten",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "deleteAccount": "Konto löschen",
+    "exportData": "Daten exportieren"
+  },
+  "posts": {
+    "create": "Beitrag erstellen",
+    "edit": "Beitrag bearbeiten",
+    "delete": "Beitrag löschen",
+    "report": "Beitrag melden",
+    "comments": "Kommentare"
+  },
+  "comments": {
+    "add": "Kommentar hinzufügen",
+    "edit": "Kommentar bearbeiten",
+    "delete": "Kommentar löschen",
+    "report": "Kommentar melden"
+  },
+  "messages": {
+    "newMessage": "Neue Nachricht",
+    "send": "Senden",
+    "reply": "Antworten"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "markAllAsRead": "Alle als gelesen markieren",
+    "empty": "Keine Benachrichtigungen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "theme": "Design",
+    "language": "Sprache",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "support": "Support",
+    "about": "Über uns"
+  },
+  "errors": {
+    "general": "Ein Fehler ist aufgetreten",
+    "network": "Netzwerkfehler",
+    "auth": "Authentifizierungsfehler",
+    "validation": "Validierungsfehler"
+  }
+}

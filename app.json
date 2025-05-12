@@ -1,29 +1,69 @@
 {
   "expo": {
-    "name": "plated",
+    "name": "Plated",
     "slug": "plated",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "de.getplated.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Diese App benötigt Zugriff auf die Kamera, um Fotos für Beiträge und Verifizierungen aufzunehmen.",
+        "NSPhotoLibraryUsageDescription": "Diese App benötigt Zugriff auf deine Fotos, um Bilder für Beiträge und Verifizierungen auszuwählen.",
+        "NSPhotoLibraryAddUsageDescription": "Diese App benötigt Zugriff, um Fotos in deiner Bibliothek zu speichern.",
+        "NSLocationWhenInUseUsageDescription": "Diese App benötigt Zugriff auf deinen Standort, um relevante Beiträge in deiner Nähe anzuzeigen.",
+        "NSUserTrackingUsageDescription": "Diese Information wird verwendet, um dir ein besseres und personalisiertes Erlebnis zu bieten."
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "package": "de.getplated.app",
+      "versionCode": 1,
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "ACCESS_FINE_LOCATION"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Die App benötigt Zugriff auf deine Fotos, um Bilder für Beiträge und Verifizierungen auszuwählen.",
+          "cameraPermission": "Die App benötigt Zugriff auf die Kamera, um Fotos für Beiträge und Verifizierungen aufzunehmen."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#ffffff"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "7fefdf15-c943-4520-bbc5-edfe4e6ca20c"
+      }
+    },
+    "owner": "fahrzeugfreunde",
+    "locales": {
+      "de": "./locales/de.json"
+    },
+    "primaryLocale": "de"
   }
 }
