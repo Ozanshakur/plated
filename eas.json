@@ -1,7 +1,6 @@
 {
   "cli": {
-    "version": ">= 5.9.1",
-    "appVersionSource": "local"
+    "version": ">= 5.9.1"
   },
   "build": {
     "development": {
@@ -9,8 +8,7 @@
       "distribution": "internal",
       "env": {
         "APP_ENV": "development"
-      },
-      "yarn": true
+      }
     },
     "preview": {
       "distribution": "internal",
@@ -19,15 +17,13 @@
       },
       "env": {
         "APP_ENV": "staging"
-      },
-      "yarn": true
+      }
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
-      },
-      "yarn": true
+      }
     }
   },
   "submit": {
