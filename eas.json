@@ -1,34 +1,26 @@
 {
-  "cli": {
-    "version": ">= 5.9.1"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m-medium"
+    "cli": {
+      "version": ">=16.2.2",
+      "appVersionSource": "remote"
+    },
+    "build": {
+      "development": {
+        "developmentClient": true,
+        "distribution": "internal"
+      },
+      "preview": {
+        "distribution": "internal",
+        "ios": {
+          "simulator": true
+        }
+      },
+      "production": {
+        "distribution": "store",
+        "autoIncrement": true
       }
     },
-    "preview": {
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m-medium"
-      },
-      "hooks": {
-        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
-      }
-    },
-    "production": {
-      "ios": {
-        "resourceClass": "m-medium"
-      },
-      "hooks": {
-        "preInstall": ".eas-hooks/eas-build-pre-install.sh"
-      }
+    "submit": {
+      "production": {}
     }
-  },
-  "submit": {
-    "production": {}
   }
-}
+  
