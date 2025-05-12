@@ -9,7 +9,8 @@
       "distribution": "internal",
       "env": {
         "APP_ENV": "development"
-      }
+      },
+      "prebuildCommand": "echo 'export const METRO_CONFIG_PATH = \"./metro.config.js\";' > metro-config-path.js"
     },
     "preview": {
       "distribution": "internal",
@@ -18,13 +19,15 @@
       },
       "env": {
         "APP_ENV": "staging"
-      }
+      },
+      "prebuildCommand": "echo 'export const METRO_CONFIG_PATH = \"./metro.config.js\";' > metro-config-path.js"
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
-      }
+      },
+      "prebuildCommand": "echo 'export const METRO_CONFIG_PATH = \"./metro.config.js\";' > metro-config-path.js"
     }
   },
   "submit": {
