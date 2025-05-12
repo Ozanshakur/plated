@@ -17,6 +17,10 @@ module.exports = {
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
+    // Add this to fix the Podfile issue
+    podfileProperties: {
+      "ios.useFrameworks": "static",
+    },
   },
   android: {
     adaptiveIcon: {
@@ -40,5 +44,14 @@ module.exports = {
     eas: {
       projectId: "7fefdf15-c943-4520-bbc5-edfe4e6ca20c",
     },
+  },
+  // Add this to fix the Podfile issue
+  hooks: {
+    postInstall: [
+      {
+        file: "fix-podfile-generation.js",
+        config: {},
+      },
+    ],
   },
 }

@@ -6,17 +6,26 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_NO_DOTENV": "1"
+      }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "EXPO_NO_DOTENV": "1"
       }
     },
     "production": {
       "distribution": "store",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_NO_DOTENV": "1"
+      }
     }
   },
   "submit": {
