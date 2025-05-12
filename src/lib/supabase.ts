@@ -32,3 +32,21 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: false,
   },
 })
+
+// Funktion zum Testen der Supabase-Verbindung
+export const testSupabaseConnection = async (): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase.from("profiles").select("id").limit(1)
+
+    if (error) {
+      console.error("Fehler beim Testen der Supabase-Verbindung:", error)
+      return false
+    }
+
+    console.log("Supabase-Verbindung erfolgreich getestet")
+    return true
+  } catch (error) {
+    console.error("Fehler beim Testen der Supabase-Verbindung:", error)
+    return false
+  }
+}
