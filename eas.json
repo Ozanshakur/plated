@@ -10,7 +10,7 @@
       "env": {
         "APP_ENV": "development"
       },
-      "credentialsSource": "remote"
+      "credentialsSource": "local"
     },
     "preview": {
       "distribution": "internal",
@@ -20,21 +20,20 @@
       "env": {
         "APP_ENV": "staging"
       },
-      "credentialsSource": "remote"
+      "credentialsSource": "local"
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
       },
-      "credentialsSource": "remote",
+      "credentialsSource": "local",
       "distribution": "store",
       "ios": {
-        "credentialsSource": "remote",
-        "enterpriseProvisioning": "universal"
+        "resourceClass": "m-medium"
       },
       "android": {
-        "credentialsSource": "remote"
+        "buildType": "app-bundle"
       }
     }
   },
