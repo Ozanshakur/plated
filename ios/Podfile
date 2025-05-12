@@ -18,13 +18,13 @@ prepare_react_native_project!
 # because `react-native-flipper` depends on (FlipperKit,...), which will be excluded. To fix this,
 # you can also exclude `react-native-flipper` in `react-native.config.js`
 #
-# ```js
+# \`\`\`js
 # module.exports = {
 #   dependencies: {
 #     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
 #   }
 # }
-# ```
+# \`\`\`
 flipper_config = FlipperConfiguration.disabled
 if ENV['NO_FLIPPER'] != '1' && !podfile_properties['ios.flipper'] == 'false' then
   # Enable Flipper
@@ -36,8 +36,7 @@ end
 
 target 'Plated' do
   use_expo_modules!
--  config = use_native_modules!
-+  config = use_native_modules!
+  config = use_native_modules!
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']

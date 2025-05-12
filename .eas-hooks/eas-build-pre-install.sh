@@ -90,8 +90,31 @@ EOL
 
 echo "Created fix-expo-podspec.js script"
 
-# Make the directory for the hooks if it doesn't exist
-mkdir -p .eas-hooks
+# Fix the Podfile
+echo "Fixing the Podfile..."
+PODFILE_PATH="$(pwd)/ios/Podfile"
+
+if [ -f "$PODFILE_PATH" ]; then
+  # Create a backup of the original Podfile
+  cp "$PODFILE_PATH" "${PODFILE_PATH}.bak"
+  
+  # Replace the problematic line in the Podfile
+  sed -i.tmp 's/config = use_native_modules!(config_command)/config = use_native_modules!/g' "$PODFILE_PATH"
+  
+  # Check if the replacement was successful
+  if grep -q "config = use_native_modules!" "$PODFILE_PATH"; then
+    echo "Successfully fixed the Podfile"
+  else
+    echo "Failed to fix the Podfile. Manual intervention required."
+    # Restore the backup if the fix failed
+    cp "${PODFILE_PATH}.bak" "$PODFILE_PATH"
+  fi
+  
+  # Clean up temporary files
+  rm -f "${PODFILE_PATH}.tmp" "${PODFILE_PATH}.bak"
+else
+  echo "Podfile not found at $PODFILE_PATH"
+fi
 
 # Make this script executable
 chmod +x "$(pwd)/.eas-hooks/eas-build-pre-install.sh"
