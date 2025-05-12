@@ -1,33 +1,32 @@
 const fs = require("fs")
 const path = require("path")
 
-// Function to find the Expo.podspec file
-function findExpoPodspec() {
-  const nodeModulesPath = path.join(process.cwd(), "node_modules")
-  const expoPodspecPath = path.join(nodeModulesPath, "expo", "Expo.podspec")
+console.log("Running fix-expo-podspec.js")
 
-  if (fs.existsSync(expoPodspecPath)) {
-    return expoPodspecPath
-  }
+// Function to find files recursively
+function findFiles(dir, fileName, fileList = []) {
+  const files = fs.readdirSync(dir)
 
-  // If we're in an EAS build environment, check the workingdir path
-  if (process.env.EAS_BUILD === "true") {
-    const easBuildPath = "/Users/expo/workingdir/build/node_modules/expo/Expo.podspec"
-    if (fs.existsSync(easBuildPath)) {
-      return easBuildPath
+  files.forEach((file) => {
+    const filePath = path.join(dir, file)
+    const stat = fs.statSync(filePath)
+
+    if (stat.isDirectory() && !filePath.includes("node_modules/.cache")) {
+      findFiles(filePath, fileName, fileList)
+    } else if (file === fileName) {
+      fileList.push(filePath)
     }
-  }
+  })
 
-  console.log("Could not find Expo.podspec file")
-  return null
+  return fileList
 }
 
 // Function to patch the Expo.podspec file
-function patchExpoPodspec(podspecPath) {
-  console.log(`Patching Expo.podspec at ${podspecPath}`)
+function patchExpoPodspec(filePath) {
+  console.log(`Found Expo.podspec at ${filePath}`)
 
   try {
-    const content = fs.readFileSync(podspecPath, "utf8")
+    const content = fs.readFileSync(filePath, "utf8")
 
     // Check if the file contains the problematic line
     if (content.includes("compiler_flags = get_folly_config()[:compiler_flags]")) {
@@ -44,7 +43,7 @@ end
 compiler_flags = get_folly_config()[:compiler_flags]`,
       )
 
-      fs.writeFileSync(podspecPath, patchedContent)
+      fs.writeFileSync(filePath, patchedContent)
       console.log("Successfully patched Expo.podspec")
       return true
     } else {
@@ -57,62 +56,72 @@ compiler_flags = get_folly_config()[:compiler_flags]`,
   }
 }
 
-// Function to patch the ExpoModulesCore.podspec file
-function patchExpoModulesCorePodspec() {
+// Function to patch the Podfile
+function patchPodfile(filePath) {
+  console.log(`Found Podfile at ${filePath}`)
+
   try {
-    // Path to ExpoModulesCore.podspec
-    const expoModulesCorePath = path.join(process.cwd(), "node_modules", "expo-modules-core", "ExpoModulesCore.podspec")
+    const content = fs.readFileSync(filePath, "utf8")
 
-    // Check if the file exists
-    if (fs.existsSync(expoModulesCorePath)) {
-      // Read the file
-      const coreContent = fs.readFileSync(expoModulesCorePath, "utf8")
+    // Check if the file contains the problematic line
+    if (content.includes("config = use_native_modules!(config_command)")) {
+      console.log("Found problematic line in Podfile, patching...")
 
-      // Check if the file already contains our patch
-      if (coreContent.includes("if defined?(get_folly_config)")) {
-        console.log("ExpoModulesCore.podspec is already patched.")
-      } else {
-        // Apply the patch
-        const patchedCoreContent = coreContent.replace(
-          "compiler_flags = get_folly_config()[:compiler_flags] + ' ' + \"-DREACT_NATIVE_TARGET_VERSION=#{reactNativeTargetVersion}\"",
-          `# Define folly config directly if get_folly_config is not available
-  compiler_flags = begin
-    if defined?(get_folly_config)
-      get_folly_config()[:compiler_flags]
-    else
-      "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -DRNVERSION=0.73"
-    end
-  end + ' ' + "-DREACT_NATIVE_TARGET_VERSION=#{reactNativeTargetVersion}"`,
-        )
+      // Replace the problematic line
+      const patchedContent = content.replace(
+        "config = use_native_modules!(config_command)",
+        "config = use_native_modules!",
+      )
 
-        // Write the file back
-        fs.writeFileSync(expoModulesCorePath, patchedCoreContent)
-        console.log("Successfully patched ExpoModulesCore.podspec")
-      }
+      fs.writeFileSync(filePath, patchedContent)
+      console.log("Successfully patched Podfile")
+      return true
     } else {
-      console.log("ExpoModulesCore.podspec not found. Skipping patch.")
+      console.log("The problematic line was not found in Podfile")
+      return false
     }
   } catch (error) {
-    console.error("Error patching podspec files:", error)
+    console.error("Error patching Podfile:", error)
+    return false
   }
 }
 
-// Main function
-function main() {
-  console.log("Starting Expo.podspec patch script")
+// Try to find and patch Expo.podspec
+console.log("Searching for Expo.podspec...")
+const expoPodspecPaths = findFiles(process.cwd(), "Expo.podspec")
 
-  const podspecPath = findExpoPodspec()
-  if (podspecPath) {
-    const patched = patchExpoPodspec(podspecPath)
-    if (patched) {
-      console.log("Expo.podspec patched successfully")
-    } else {
-      console.log("Failed to patch Expo.podspec")
-    }
+if (expoPodspecPaths.length > 0) {
+  let patchedAny = false
+
+  for (const filePath of expoPodspecPaths) {
+    const patched = patchExpoPodspec(filePath)
+    patchedAny = patchedAny || patched
   }
 
-  patchExpoModulesCorePodspec()
+  if (!patchedAny) {
+    console.log("Could not patch any Expo.podspec files")
+  }
+} else {
+  console.log("Could not find any Expo.podspec files")
 }
 
-// Run the main function
-main()
+// Try to find and patch Podfile
+console.log("Searching for Podfile...")
+const podfilePaths = findFiles(process.cwd(), "Podfile")
+
+if (podfilePaths.length > 0) {
+  let patchedAny = false
+
+  for (const filePath of podfilePaths) {
+    const patched = patchPodfile(filePath)
+    patchedAny = patchedAny || patched
+  }
+
+  if (!patchedAny) {
+    console.log("Could not patch any Podfile files")
+  }
+} else {
+  console.log("Could not find any Podfile files")
+}
+
+console.log("fix-expo-podspec.js completed")
