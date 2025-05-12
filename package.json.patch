@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "postinstall": "node patch-expo.js && patch-package",
+    "prepare": "patch-package"
+  },
+  "devDependencies": {
+    "patch-package": "^7.0.0"
+  }
+}
