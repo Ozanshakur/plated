@@ -9,8 +9,7 @@
       "distribution": "internal",
       "env": {
         "APP_ENV": "development"
-      },
-      "credentialsSource": "local"
+      }
     },
     "preview": {
       "distribution": "internal",
@@ -19,18 +18,17 @@
       },
       "env": {
         "APP_ENV": "staging"
-      },
-      "credentialsSource": "local"
+      }
     },
     "production": {
       "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
       },
-      "credentialsSource": "local",
       "distribution": "store",
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "credentialsSource": "remote"
       },
       "android": {
         "buildType": "app-bundle"
