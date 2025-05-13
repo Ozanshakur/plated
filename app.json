@@ -13,10 +13,15 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "de.getplated.app",
+      "buildNumber": "1",
+      "jsEngine": "jsc",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "NSCameraUsageDescription": "Diese App benötigt Zugriff auf die Kamera, um Fotos aufzunehmen.",
+        "NSPhotoLibraryUsageDescription": "Diese App benötigt Zugriff auf deine Fotos, um Bilder auszuwählen.",
+        "NSPhotoLibraryAddUsageDescription": "Diese App benötigt Zugriff, um Fotos in deiner Bibliothek zu speichern.",
+        "NSLocationWhenInUseUsageDescription": "Diese App benötigt Zugriff auf deinen Standort."
       }
     },
     "android": {
@@ -24,19 +29,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "de.getplated.app"
+      "package": "de.getplated.app",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Die App benötigt Zugriff auf deine Fotos, um Bilder für deine Posts auszuwählen."
-        }
-      ]
-    ],
     "extra": {
       "eas": {
         "projectId": "7fefdf15-c943-4520-bbc5-edfe4e6ca20c"
