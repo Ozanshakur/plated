@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 5.9.1"
+    "version": ">= 5.9.1",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
@@ -12,12 +13,20 @@
     },
     "production": {
       "autoIncrement": true,
-      "node": "18.18.0",
+      "node": "16.20.0",
+      "env": {
+        "EXPO_NO_DOTENV": "1",
+        "CI": "1",
+        "LEGACY_PEER_DEPS": "1"
+      },
       "ios": {
         "resourceClass": "m-medium",
+        "image": "macos-monterey-12.6-xcode-14.2",
         "buildConfiguration": "Release",
         "credentialsSource": "remote",
-        "image": "latest",
+        "distribution": "store",
+        "simulator": false,
+        "prebuildCommand": "node expo-prebuild.js",
         "env": {
           "EXPO_USE_HERMES": "0"
         }

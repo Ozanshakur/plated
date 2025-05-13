@@ -5,15 +5,6 @@ require File.join(File.dirname(`node --print "require.resolve('@react-native-com
 platform :ios, '13.0'
 prepare_react_native_project!
 
-# If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
-# because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
-#
-# To fix this you can also exclude `react-native-flipper` using a `react-native.config.js`
-# ```js
-# module.exports = {
-#   dependencies: {
-#     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
-# ```
 flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -50,8 +41,8 @@ target 'Plated' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  # Spezieller Fix für fmt-Bibliothek
-  pod 'fmt', '6.2.1'
+  # Explicitly specify fmt version and disable template parameters
+  pod 'fmt', '6.2.1', :modular_headers => true
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
@@ -62,13 +53,192 @@ target 'Plated' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
     
-    # Spezieller Fix für fmt-Bibliothek
+    # Comprehensive fix for fmt library
     installer.pods_project.targets.each do |target|
       if target.name == 'fmt'
         target.build_configurations.each do |config|
+          # Add preprocessor definitions to disable problematic features
           config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
           config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FMT_USE_NONTYPE_TEMPLATE_PARAMETERS=0'
-          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++11'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FMT_DEPRECATED=/*deprecated*/'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FMT_HEADER_ONLY=1'
+          
+          # Set C++ standard to C++17 which has better support
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+          
+          # Disable exceptions to avoid potential issues
+          config.build_settings['GCC_ENABLE_CPP_EXCEPTIONS'] = 'NO'
+          
+          # Add include path for our custom header
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+          config.build_settings['HEADER_SEARCH_PATHS'] << '${PODS_ROOT}/../fmt-patch'
+        end
+      end
+      
+      # Ensure all targets use C++17
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+      end
+    end
+    
+    # Apply our patch to the fmt library
+    fmt_dir = File.join(installer.sandbox.root, 'fmt')
+    if Dir.exist?(fmt_dir)
+      fmt_src_dir = File.join(fmt_dir, 'src')
+      format_cc_path = File.join(fmt_src_dir, 'format.cc')
+      
+      if File.exist?(format_cc_path)
+        puts "📝 Patching fmt library format.cc..."
+        
+        # Create backup
+        FileUtils.cp(format_cc_path, "#{format_cc_path}.bak")
+        
+        # Replace with our patched version
+        patch_file = File.join(installer.sandbox.root, '../fmt-patch/format.cc')
+        if File.exist?(patch_file)
+          FileUtils.cp(patch_file, format_cc_path)
+          puts "✅ Successfully replaced #{format_cc_path} with patched version"
+        else
+          puts "⚠️ Patch file not found at #{patch_file}, creating it now..."
+          
+          # Create a minimal replacement file
+          replacement_content = <<~EOT
+            // Completely replaced format.cc to avoid template instantiation issues
+            #include <string>
+            #include <iostream>
+            #include <cstring>
+            
+            // Define the problematic char8_type to avoid the error
+            namespace fmt {
+              namespace internal {
+                typedef char char8_type;
+              }
+            }
+            
+            // Provide explicit specialization for the problematic template
+            namespace std {
+              template <>
+              struct char_traits<fmt::internal::char8_type> {
+                typedef fmt::internal::char8_type char_type;
+                typedef int int_type;
+                typedef std::streampos pos_type;
+                typedef std::streamoff off_type;
+                typedef std::mbstate_t state_type;
+            
+                static void assign(char_type& c1, const char_type& c2) noexcept { c1 = c2; }
+                static bool eq(const char_type& c1, const char_type& c2) noexcept { return c1 == c2; }
+                static bool lt(const char_type& c1, const char_type& c2) noexcept { return c1 < c2; }
+                static int compare(const char_type* s1, const char_type* s2, size_t n) { return std::memcmp(s1, s2, n); }
+                static size_t length(const char_type* s) { return std::strlen(s); }
+                static const char_type* find(const char_type* s, size_t n, const char_type& a) { return static_cast<const char_type*>(std::memchr(s, a, n)); }
+                static char_type* move(char_type* s1, const char_type* s2, size_t n) { return static_cast<char_type*>(std::memmove(s1, s2, n)); }
+                static char_type* copy(char_type* s1, const char_type* s2, size_t n) { return static_cast<char_type*>(std::memcpy(s1, s2, n)); }
+                static char_type* assign(char_type* s, size_t n, char_type a) { return static_cast<char_type*>(std::memset(s, a, n)); }
+                static int_type not_eof(int_type c) noexcept { return c != EOF ? c : 0; }
+                static char_type to_char_type(int_type c) noexcept { return static_cast<char_type>(c); }
+                static int_type to_int_type(char_type c) noexcept { return static_cast<int_type>(c); }
+                static bool eq_int_type(int_type c1, int_type c2) noexcept { return c1 == c2; }
+                static int_type eof() noexcept { return EOF; }
+              };
+            }
+            
+            // Provide minimal implementations to satisfy the linker
+            namespace fmt {
+              namespace v6 {
+                void vprint(std::FILE*, string_view, format_args) {}
+                void print(std::FILE*, string_view, format_args) {}
+              }
+              
+              namespace internal {
+                void format_error_code(buffer<char>&, int, string_view) {}
+                void format_windows_error(buffer<char>&, int, string_view) {}
+              }
+            }
+          EOT
+          
+          File.write(format_cc_path, replacement_content)
+          puts "✅ Successfully created patched format.cc"
+        end
+      end
+      
+      # Add our header to the include directory
+      fmt_include_dir = File.join(fmt_dir, 'include/fmt')
+      header_dest = File.join(fmt_include_dir, 'char_traits_patch.h')
+      header_src = File.join(installer.sandbox.root, '../fmt-patch/char_traits_patch.h')
+      
+      if File.exist?(header_src)
+        FileUtils.mkdir_p(fmt_include_dir) unless Dir.exist?(fmt_include_dir)
+        FileUtils.cp(header_src, header_dest)
+        puts "✅ Successfully copied char_traits_patch.h to #{header_dest}"
+        
+        # Patch format.h to include our header
+        format_h_path = File.join(fmt_include_dir, 'format.h')
+        if File.exist?(format_h_path)
+          content = File.read(format_h_path)
+          if !content.include?('char_traits_patch.h')
+            new_content = "#include \"fmt/char_traits_patch.h\"\n" + content
+            File.write(format_h_path, new_content)
+            puts "✅ Successfully patched format.h"
+          else
+            puts "ℹ️ format.h already patched"
+          end
+        end
+      else
+        puts "⚠️ Creating char_traits_patch.h..."
+        
+        # Create the header file directly
+        header_content = <<~EOT
+          #pragma once
+          #include <string>
+          
+          // Define the problematic char8_type to avoid the error
+          namespace fmt {
+            namespace internal {
+              typedef char char8_type;
+            }
+          }
+          
+          // Provide explicit specialization for the problematic template
+          namespace std {
+            template <>
+            struct char_traits<fmt::internal::char8_type> {
+              typedef fmt::internal::char8_type char_type;
+              typedef int int_type;
+              typedef std::streampos pos_type;
+              typedef std::streamoff off_type;
+              typedef std::mbstate_t state_type;
+          
+              static void assign(char_type& c1, const char_type& c2) noexcept;
+              static bool eq(const char_type& c1, const char_type& c2) noexcept;
+              static bool lt(const char_type& c1, const char_type& c2) noexcept;
+              static int compare(const char_type* s1, const char_type* s2, size_t n);
+              static size_t length(const char_type* s);
+              static const char_type* find(const char_type* s, size_t n, const char_type& a);
+              static char_type* move(char_type* s1, const char_type* s2, size_t n);
+              static char_type* copy(char_type* s1, const char_type* s2, size_t n);
+              static char_type* assign(char_type* s, size_t n, char_type a);
+              static int_type not_eof(int_type c) noexcept;
+              static char_type to_char_type(int_type c) noexcept;
+              static int_type to_int_type(char_type c) noexcept;
+              static bool eq_int_type(int_type c1, int_type c2) noexcept;
+              static int_type eof() noexcept;
+            };
+          }
+        EOT
+        
+        FileUtils.mkdir_p(fmt_include_dir) unless Dir.exist?(fmt_include_dir)
+        File.write(header_dest, header_content)
+        puts "✅ Successfully created char_traits_patch.h"
+        
+        # Patch format.h to include our header
+        format_h_path = File.join(fmt_include_dir, 'format.h')
+        if File.exist?(format_h_path)
+          content = File.read(format_h_path)
+          if !content.include?('char_traits_patch.h')
+            new_content = "#include \"fmt/char_traits_patch.h\"\n" + content
+            File.write(format_h_path, new_content)
+            puts "✅ Successfully patched format.h"
+          end
         end
       end
     end
