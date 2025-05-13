@@ -17,7 +17,10 @@
         "resourceClass": "m-medium",
         "buildConfiguration": "Release",
         "credentialsSource": "remote",
-        "image": "latest"
+        "image": "latest",
+        "env": {
+          "EXPO_USE_HERMES": "0"
+        }
       }
     }
   },

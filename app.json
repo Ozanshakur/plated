@@ -11,17 +11,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "de.getplated.app",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "jsEngine": "jsc",
       "infoPlist": {
         "NSCameraUsageDescription": "Diese App benötigt Zugriff auf die Kamera, um Fotos aufzunehmen.",
         "NSPhotoLibraryUsageDescription": "Diese App benötigt Zugriff auf deine Fotos, um Bilder auszuwählen.",
         "NSPhotoLibraryAddUsageDescription": "Diese App benötigt Zugriff, um Fotos in deiner Bibliothek zu speichern.",
-        "NSLocationWhenInUseUsageDescription": "Diese App benötigt Zugriff auf deinen Standort."
+        "NSLocationWhenInUseUsageDescription": "Diese App benötigt Zugriff auf deinen Standort.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -39,6 +42,16 @@
       "eas": {
         "projectId": "7fefdf15-c943-4520-bbc5-edfe4e6ca20c"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }
